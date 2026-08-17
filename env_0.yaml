@@ -1,0 +1,84 @@
+# Complex test environment: 5 drones, 100 x 100 x 100 workspace, 7 obstacles.
+#
+# The dominant feature is a wall across y = 50 pierced by a single window,
+# built from four boxes (obstacles 1-4). Every drone must climb to z ~ 50,
+# thread the window, and descend to its goal in the far corner. The window is
+# the narrow passage that makes this hard for a sampling-based planner: its
+# volume is a ~2.6e-4 fraction of the workspace, and all five drones must pass
+# through the same opening without colliding with one another.
+#
+# Obstacles 5-7 (cylinder, sphere, rotated box) clutter the two rooms and cover
+# all three geometry types.
+
+bounds:
+  x: [0, 100]
+  y: [0, 100]
+  z: [0, 100]
+
+# All five drones start clustered in the near-bottom corner, well clear of the
+# wall (drone radius is 0.3, so centres must stay more than 0.6 apart).
+initial_configuration: [[5, 5, 5], [9, 5, 5], [13, 5, 5], [5, 9, 5], [9, 9, 5]]
+
+obstacles:
+  # --- wall at y = 50, spanning y in [48, 52], with a window at ---------------
+  # --- x in [44, 56], z in [44, 56] ------------------------------------------
+  - type: box            # left of the window: x in [0, 44]
+    position: [22, 50, 50]
+    size: [44, 4, 100]
+    rotation: [0, 0, 0]
+    color: red
+
+  - type: box            # right of the window: x in [56, 100]
+    position: [78, 50, 50]
+    size: [44, 4, 100]
+    rotation: [0, 0, 0]
+    color: red
+
+  - type: box            # below the window: z in [0, 44]
+    position: [50, 50, 22]
+    size: [12, 4, 44]
+    rotation: [0, 0, 0]
+    color: red
+
+  - type: box            # above the window: z in [56, 100]
+    position: [50, 50, 78]
+    size: [12, 4, 44]
+    rotation: [0, 0, 0]
+    color: red
+
+  # --- clutter ---------------------------------------------------------------
+  - type: cylinder       # pillar in the far room, short of the goal corner
+    endpoints: [[72, 72, 0], [72, 72, 60]]
+    radius: 6.0
+    rotation: [0, 0, 0]
+    color: darkred
+
+  - type: sphere         # blocks a direct climb on the left of the near room
+    position: [30, 72, 35]
+    radius: 10.0
+    color: darkred
+
+  - type: box            # rotated slab in the near room, right side
+    position: [70, 22, 30]
+    size: [22, 22, 22]
+    rotation: [0, 0, 30]
+    color: darkred
+
+# One goal per drone, spread through the far corner at several heights so the
+# team cannot simply fly in formation.
+goals:
+  - position: [90, 90, 10]
+    radius: 2.0
+    color: yellow
+  - position: [76, 92, 12]
+    radius: 2.0
+    color: yellow
+  - position: [92, 76, 12]
+    radius: 2.0
+    color: yellow
+  - position: [84, 84, 28]
+    radius: 2.0
+    color: yellow
+  - position: [90, 90, 40]
+    radius: 2.0
+    color: yellow
