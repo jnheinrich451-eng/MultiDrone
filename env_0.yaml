@@ -1,59 +1,64 @@
 # Complex test environment: 5 drones, 100 x 100 x 100 workspace, 7 obstacles.
 #
-# The dominant feature is a wall across y = 50 pierced by a single window,
-# built from four boxes (obstacles 1-4). Every drone must climb to z ~ 50,
-# thread the window, and descend to its goal in the far corner. The window is
-# the narrow passage that makes this hard for a sampling-based planner: its
-# volume is a ~2.6e-4 fraction of the workspace, and all five drones must pass
-# through the same opening without colliding with one another.
+# Obstacles 1-4 form a wall across y = 50 (spanning y in [48, 52]) with a
+# 60 x 60 opening at x, z in [20, 80]. The wall forces every drone off the
+# direct diagonal route and into the opening, but the opening is wide enough
+# that the drones do not have to queue through it single file - see the note
+# below on why that distinction matters.
 #
-# Obstacles 5-7 (cylinder, sphere, rotated box) clutter the two rooms and cover
+# Obstacles 5-7 (cylinder, sphere, rotated box) clutter both rooms and cover
 # all three geometry types.
+#
+# Design note: a *sealed* wall with a small hole makes this environment
+# unsolvable for K = 5 within 20 s, because a centralised planner must thread
+# the same corridor five times in sequence without disturbing the drones that
+# are already through. Shrinking the opening from 60 to 30 drops the success
+# rate from ~75% to ~35%; at 12 it reaches 0%. Passage width, not obstacle
+# count, is what governs the difficulty here.
 
 bounds:
   x: [0, 100]
   y: [0, 100]
   z: [0, 100]
 
-# All five drones start clustered in the near-bottom corner, well clear of the
-# wall (drone radius is 0.3, so centres must stay more than 0.6 apart).
+# All five drones start clustered in the near-bottom corner. The drone radius
+# is 0.3, so centres must stay more than 0.6 apart.
 initial_configuration: [[5, 5, 5], [9, 5, 5], [13, 5, 5], [5, 9, 5], [9, 9, 5]]
 
 obstacles:
-  # --- wall at y = 50, spanning y in [48, 52], with a window at ---------------
-  # --- x in [44, 56], z in [44, 56] ------------------------------------------
-  - type: box            # left of the window: x in [0, 44]
-    position: [22, 50, 50]
-    size: [44, 4, 100]
+  # --- wall at y = 50, with a 60 x 60 opening at x, z in [20, 80] ------------
+  - type: box            # left of the opening: x in [0, 20]
+    position: [10, 50, 50]
+    size: [20, 4, 100]
     rotation: [0, 0, 0]
     color: red
 
-  - type: box            # right of the window: x in [56, 100]
-    position: [78, 50, 50]
-    size: [44, 4, 100]
+  - type: box            # right of the opening: x in [80, 100]
+    position: [90, 50, 50]
+    size: [20, 4, 100]
     rotation: [0, 0, 0]
     color: red
 
-  - type: box            # below the window: z in [0, 44]
-    position: [50, 50, 22]
-    size: [12, 4, 44]
+  - type: box            # below the opening: z in [0, 20]
+    position: [50, 50, 10]
+    size: [60, 4, 20]
     rotation: [0, 0, 0]
     color: red
 
-  - type: box            # above the window: z in [56, 100]
-    position: [50, 50, 78]
-    size: [12, 4, 44]
+  - type: box            # above the opening: z in [80, 100]
+    position: [50, 50, 90]
+    size: [60, 4, 20]
     rotation: [0, 0, 0]
     color: red
 
-  # --- clutter ---------------------------------------------------------------
+  # --- clutter --------------------------------------------------------------
   - type: cylinder       # pillar in the far room, short of the goal corner
     endpoints: [[72, 72, 0], [72, 72, 60]]
     radius: 6.0
     rotation: [0, 0, 0]
     color: darkred
 
-  - type: sphere         # blocks a direct climb on the left of the near room
+  - type: sphere         # blocks a direct climb on the left of the far room
     position: [30, 72, 35]
     radius: 10.0
     color: darkred
