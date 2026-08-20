@@ -1,0 +1,57 @@
+# Clutter family, 5 randomly placed obstacles, no wall.
+# Only the obstacle count varies across this family; bounds,
+# starts and goals are identical. Seed = 0, K = 5.
+
+bounds:
+  x: [0, 100.0]
+  y: [0, 100.0]
+  z: [0, 100.0]
+initial_configuration:
+- [5.0, 5.0, 5.0]
+- [9.0, 5.0, 5.0]
+- [13.0, 5.0, 5.0]
+- [5.0, 9.0, 5.0]
+- [9.0, 9.0, 5.0]
+obstacles:
+- type: cylinder
+  endpoints:
+  - [32.5, 15.11, 0.0]
+  - [32.5, 15.11, 39.52]
+  radius: 6.65
+  rotation: [0, 0, 0]
+  color: red
+- type: sphere
+  position: [58.1, 67.44, 53.32]
+  radius: 8.68
+  color: red
+- type: box
+  position: [12.21, 77.16, 14.55]
+  size: [16.76, 10.11, 18.36]
+  rotation: [0, 0, 73]
+  color: red
+- type: box
+  position: [34.78, 44.12, 14.15]
+  size: [9.49, 16.05, 15.77]
+  rotation: [0, 0, 48]
+  color: red
+- type: box
+  position: [41.16, 87.79, 86.54]
+  size: [16.23, 15.81, 16.26]
+  rotation: [0, 0, 55]
+  color: red
+goals:
+- position: [90.0, 90.0, 10.0]
+  radius: 2.0
+  color: yellow
+- position: [82.0, 90.0, 12.0]
+  radius: 2.0
+  color: yellow
+- position: [74.0, 90.0, 12.0]
+  radius: 2.0
+  color: yellow
+- position: [90.0, 82.0, 28.0]
+  radius: 2.0
+  color: yellow
+- position: [82.0, 82.0, 40.0]
+  radius: 2.0
+  color: yellow
