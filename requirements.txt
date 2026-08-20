@@ -1,0 +1,17 @@
+# COMP4620/8620 Part B - centralised multi-drone motion planning
+#
+# Install everything with:
+#     pip install -r requirements.txt
+#
+# --- Required by the provided simulator (multi_drone.py) --------------------
+numpy
+python-fcl          # imported as `fcl`; the collision checker
+PyYAML              # imported as `yaml`; environment files
+scipy               # rotations, and the t / binomial intervals in the stats
+vedo                # 3D visualisation only - not used by any collision query
+
+# --- Required by the plotting tools ----------------------------------------
+# plot_path.py and plot_results.py only. The planner itself does NOT need this:
+#   rrt_connect.py -> rrt_planner.py -> multi_drone.py
+# imports only numpy plus the five packages above, so the demo runs without it.
+matplotlib
