@@ -19,8 +19,11 @@ attributable to that parameter alone.
 
 Usage:
 
-    python make_envs.py --out envs --drones 5
-    python make_envs.py --out envs --drones 2 --workspace 50
+    python make_envs.py --out envs --drones 2                    # K=2 family for the Q5 comparison
+    python make_envs.py --out envs_small --workspace 50          # scales all geometry proportionally
+    python make_envs.py --out envs --openings 60 40 20 --counts 0 10 20
+    python make_envs.py --out envs2 --seed 7                     # different random clutter layout
+
 
 The generator is standalone: it validates the environments it writes using its
 own analytic clearance tests, so it needs neither fcl nor the simulator.
