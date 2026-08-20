@@ -442,22 +442,36 @@ def rrt_plan(
 # Command-line interface
 # ---------------------------------------------------------------------------
 
-def _mean_and_ci(values: list[float]) -> tuple[float, float, float]:
-    """Return (mean, ci_low, ci_high) for a 95% confidence interval of the mean."""
+def _mean_and_ci(values: list[float], floor: float | None = 0.0
+                 ) -> tuple[float, float, float]:
+    """Return (mean, ci_low, ci_high) for a 95% confidence interval of the mean.
+
+    With fewer than two samples the bounds are NaN rather than equal to the
+    mean: one observation tells you nothing about the spread, and reporting a
+    zero-width interval would claim certainty that does not exist.
+
+    ``floor`` clips the lower bound, defaulting to 0 because every quantity
+    measured here (time, path length, node counts) is non-negative. At small n
+    the t interval is wide enough to run past zero, which is arithmetically
+    correct but not a meaningful claim about a duration.
+    """
     arr = np.asarray(values, dtype=float)
     n = arr.size
     if n == 0:
         return float("nan"), float("nan"), float("nan")
     mean = float(arr.mean())
     if n == 1:
-        return mean, mean, mean
+        return mean, float("nan"), float("nan")
     sem = float(arr.std(ddof=1) / np.sqrt(n))
     try:
         from scipy.stats import t as _t
         crit = float(_t.ppf(0.975, df=n - 1))
     except Exception:
         crit = 1.96
-    return mean, mean - crit * sem, mean + crit * sem
+    low, high = mean - crit * sem, mean + crit * sem
+    if floor is not None:
+        low = max(floor, low)
+    return mean, low, high
 
 
 def main() -> None:
