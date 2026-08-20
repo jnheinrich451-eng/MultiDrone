@@ -9,12 +9,20 @@
 # Obstacles 5-7 (cylinder, sphere, rotated box) clutter both rooms and cover
 # all three geometry types.
 #
-# Design note: a *sealed* wall with a small hole makes this environment
-# unsolvable for K = 5 within 20 s, because a centralised planner must thread
-# the same corridor five times in sequence without disturbing the drones that
-# are already through. Shrinking the opening from 60 to 30 drops the success
-# rate from ~75% to ~35%; at 12 it reaches 0%. Passage width, not obstacle
-# count, is what governs the difficulty here.
+# Design note (measured, K = 5, 20 s, 12 seeds per cell): how much the opening
+# width costs depends entirely on the planner, not on the environment alone.
+#
+#   opening   single-tree RRT      bidirectional RRT-Connect
+#    60x60      3/12  12.4 s         12/12   7.5 s
+#    30x30      0/12    -            12/12   6.6 s
+#    20x20      1/12  19.9 s         12/12   7.1 s
+#    12x12      0/12    -            10/12   9.8 s
+#
+# Narrowing the opening destroys the single-tree planner but barely touches
+# the bidirectional one, whose goal tree grows out through the opening instead
+# of having to discover it by chance. Obstacle count, by contrast, is nearly
+# free for both: five drones cross this workspace with three scattered
+# obstacles in ~3 s, and an empty one in 0.02 s.
 
 bounds:
   x: [0, 100]
