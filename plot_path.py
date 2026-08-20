@@ -11,13 +11,16 @@ and writes a PNG, so a path can be inspected anywhere.
 
 Or from the command line, which plans and plots in one go:
 
-    python plot_path.py --env environment.yaml --drones 2 --out path.png
+    python plot_path.py --env env_0.yaml --drones 5
+        -> figures/path_5_env_0.png and figures/separation_5_env_0.png
 
 Only numpy / pyyaml / scipy / matplotlib are needed for plotting itself; fcl is
 only required by the command-line mode, which runs the planner first.
 """
 
 from __future__ import annotations
+
+import os
 
 import numpy as np
 import yaml
@@ -30,6 +33,25 @@ from scipy.spatial.transform import Rotation as R
 # ---------------------------------------------------------------------------
 # Obstacle geometry
 # ---------------------------------------------------------------------------
+
+def _ensure_dir(path: str) -> None:
+    """Create the parent directory of `path` if needed.
+
+    Note os.makedirs(..., exist_ok=True) still raises when the target already
+    exists as a *file* - exist_ok only tolerates an existing directory. That
+    happens when an output filename is passed where a directory was expected,
+    so translate it into a message that says what to do.
+    """
+    parent = os.path.dirname(os.path.abspath(path))
+    if not parent or os.path.isdir(parent):
+        return
+    if os.path.exists(parent):
+        raise NotADirectoryError(
+            f"cannot write {path!r}: {parent!r} already exists as a file, not a "
+            f"directory. If you meant to name the output file, pass it with "
+            f"--out instead of --out-dir.")
+    os.makedirs(parent, exist_ok=True)
+
 
 def _rotation(euler_deg) -> np.ndarray:
     if not euler_deg:
@@ -170,8 +192,9 @@ def plot_path(
     fig.tight_layout()
 
     if out:
+        _ensure_dir(out)
         fig.savefig(out, dpi=130)
-        print(f"wrote {out}")
+        print(f"wrote {os.path.abspath(out)}")
     if show:
         plt.show()
     return fig, ax
@@ -206,41 +229,130 @@ def plot_drone_separation(path: list[np.ndarray], drone_radius: float = 0.3,
     fig.tight_layout()
 
     if out:
+        _ensure_dir(out)
         fig.savefig(out, dpi=130)
-        print(f"wrote {out}")
+        print(f"wrote {os.path.abspath(out)}")
     if show:
         plt.show()
     return fig, ax
 
 
+def infer_drones(environment_file: str) -> int:
+    """Number of drones an environment expects, from its initial_configuration."""
+    with open(environment_file, "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+    return len(config["initial_configuration"])
+
+
+def plot_one(environment_file: str, drones: int | None, planner, time_limit: float,
+             seed: int, out_dir: str, out: str | None, separation_out: str | None,
+             show: bool) -> bool:
+    """Plan and plot one environment. Returns True if a path was found."""
+    from multi_drone import MultiDrone
+
+    k = drones if drones is not None else infer_drones(environment_file)
+    env_stem = os.path.splitext(os.path.basename(environment_file))[0]
+
+    sim = MultiDrone(num_drones=k, environment_file=environment_file)
+    path, stats = planner(sim, time_limit=time_limit, seed=seed)
+    if path is None:
+        print(f"  {env_stem}: no path in {stats['search_time']:.2f}s "
+              f"({stats['nodes']} nodes) - nothing to plot")
+        return False
+
+    print(f"  {env_stem}: solved in {stats['search_time']:.2f}s, "
+          f"{len(path)} waypoints, "
+          f"length {stats.get('smoothed_path_length', stats['path_length']):.2f}")
+
+    def resolve(name, default):
+        """Put bare filenames inside out_dir; leave explicit paths alone."""
+        name = name or default
+        if os.path.isabs(name) or os.path.dirname(name):
+            return name
+        return os.path.join(out_dir, name)
+
+    fig, _ = plot_path(path, environment_file, show=show,
+                       out=resolve(out, f"path_{k}_{env_stem}.png"))
+    fig2, _ = plot_drone_separation(path, drone_radius=getattr(sim, "_drone_radius", 0.3),
+                                    show=show,
+                                    out=resolve(separation_out,
+                                                f"separation_{k}_{env_stem}.png"))
+    if not show:                      # batches would otherwise pile up open figures
+        plt.close(fig)
+        plt.close(fig2)
+    return True
+
+
 def main() -> None:
     import argparse
+    import glob
 
-    parser = argparse.ArgumentParser(description="Plan and plot a path with matplotlib.")
-    parser.add_argument("--env", default="environment.yaml")
-    parser.add_argument("--drones", type=int, default=2)
+    parser = argparse.ArgumentParser(
+        description="Plan and plot paths with matplotlib, for one environment "
+                    "or a whole folder.")
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--env", default=None, help="a single environment YAML")
+    source.add_argument("--env-folder", default=None,
+                        help="process every environment in this folder")
+    parser.add_argument("--pattern", default="*",
+                        help="filename filter for --env-folder, e.g. 'passage_*'")
+    parser.add_argument("--drones", type=int, default=None,
+                        help="number of drones; inferred from each environment "
+                             "file when omitted")
+    parser.add_argument("--planner", default="rrt-connect",
+                        choices=["rrt", "rrt-connect"])
     parser.add_argument("--time-limit", type=float, default=20.0)
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--out", default="path.png")
-    parser.add_argument("--separation-out", default="separation.png")
+    parser.add_argument("--out-dir", default="figures",
+                        help="directory for the PNGs (created if missing)")
+    parser.add_argument("--out", default=None,
+                        help="path figure filename; defaults to "
+                             "path_<drones>_<env>.png. Single-environment mode only")
+    parser.add_argument("--separation-out", default=None,
+                        help="separation figure filename; defaults to "
+                             "separation_<drones>_<env>.png")
     parser.add_argument("--show", action="store_true", help="open a window as well")
     args = parser.parse_args()
 
-    from multi_drone import MultiDrone
+    if os.path.isfile(args.out_dir):
+        raise SystemExit(
+            f"--out-dir {args.out_dir!r} is an existing file. It names a "
+            f"directory for the figures; use --out to name the file.")
+
+    if args.env_folder:
+        environments = sorted(glob.glob(os.path.join(args.env_folder, f"{args.pattern}.yaml")) +
+                              glob.glob(os.path.join(args.env_folder, f"{args.pattern}.yml")))
+        if not environments:
+            raise SystemExit(f"no environments matching '{args.pattern}' "
+                             f"in {args.env_folder}/")
+        if args.out or args.separation_out:
+            raise SystemExit("--out/--separation-out name a single file; they "
+                             "cannot be combined with --env-folder")
+    else:
+        environments = [args.env or "environment.yaml"]
+
     from rrt_planner import rrt_plan
+    from rrt_connect import rrt_connect_plan
+    planner = {"rrt": rrt_plan, "rrt-connect": rrt_connect_plan}[args.planner]
 
-    sim = MultiDrone(num_drones=args.drones, environment_file=args.env)
-    path, stats = rrt_plan(sim, time_limit=args.time_limit, seed=args.seed)
-    if path is None:
-        print(f"no path found in {stats['search_time']:.2f}s "
-              f"({stats['nodes']} nodes) - nothing to plot")
-        return
+    print(f"{len(environments)} environment(s), planner={args.planner}, "
+          f"{args.time_limit:g}s each")
+    solved, failed = [], []
+    for environment_file in environments:
+        try:
+            ok = plot_one(environment_file, args.drones, planner, args.time_limit,
+                          args.seed, args.out_dir, args.out, args.separation_out,
+                          args.show)
+        except Exception as exc:      # a bad environment must not kill the batch
+            print(f"  {os.path.basename(environment_file)}: "
+                  f"{type(exc).__name__}: {exc}")
+            ok = False
+        (solved if ok else failed).append(os.path.basename(environment_file))
 
-    print(f"solved in {stats['search_time']:.2f}s, {len(path)} waypoints, "
-          f"length {stats.get('smoothed_path_length', stats['path_length']):.2f}")
-    plot_path(path, args.env, out=args.out, show=args.show)
-    plot_drone_separation(path, drone_radius=getattr(sim, "_drone_radius", 0.3),
-                          out=args.separation_out, show=args.show)
+    print(f"\nplotted {len(solved)}/{len(environments)} into "
+          f"{os.path.abspath(args.out_dir)}")
+    if failed:
+        print("no figure for: " + ", ".join(failed))
 
 
 if __name__ == "__main__":

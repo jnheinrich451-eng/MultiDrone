@@ -1,0 +1,3 @@
+env,family,param,planner,K,seed,success,search_time,total_time,path_length,waypoints,nodes,iterations,error
+passage_w010.yaml,passage,10.0,rrt,5,0,0,20.0102,20.0106,,,3132,11639,
+passage_w015.yaml,passage,15.0,rrt,5,0,1,5.4647,5.4655,738.606,75,810,2138,

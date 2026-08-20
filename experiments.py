@@ -39,14 +39,9 @@ PLANNERS = {"rrt": rrt_plan, "rrt-connect": rrt_connect_plan}
 
 
 def make_sim(num_drones: int, environment_file: str):
-    """Build a simulator, preferring the headless subclass so a long sweep does
-    not create one VTK window per environment."""
-    try:
-        from headless_drone import HeadlessMultiDrone
-        return HeadlessMultiDrone(num_drones=num_drones, environment_file=environment_file)
-    except Exception:
-        from multi_drone import MultiDrone
-        return MultiDrone(num_drones=num_drones, environment_file=environment_file)
+    """Build a simulator for one environment."""
+    from multi_drone import MultiDrone
+    return MultiDrone(num_drones=num_drones, environment_file=environment_file)
 
 
 def describe(path: str) -> tuple[str, float | str]:

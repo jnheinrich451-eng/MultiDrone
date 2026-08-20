@@ -1,0 +1,174 @@
+# Clutter family, 30 randomly placed obstacles, no wall.
+# Only the obstacle count varies across this family; bounds,
+# starts and goals are identical. Seed = 0, K = 2.
+
+bounds:
+  x: [0, 100.0]
+  y: [0, 100.0]
+  z: [0, 100.0]
+initial_configuration:
+- [5.0, 5.0, 5.0]
+- [9.0, 5.0, 5.0]
+obstacles:
+- type: box
+  position: [50.0, 68.55, 25.47]
+  size: [12.66, 8.75, 16.71]
+  rotation: [0, 0, 24]
+  color: red
+- type: box
+  position: [42.03, 78.39, 47.89]
+  size: [18.95, 17.19, 18.98]
+  rotation: [0, 0, 24]
+  color: red
+- type: box
+  position: [17.59, 17.34, 78.03]
+  size: [15.61, 13.96, 9.96]
+  rotation: [0, 0, 23]
+  color: red
+- type: cylinder
+  endpoints:
+  - [36.17, 66.03, 26.84]
+  - [36.17, 66.03, 67.14]
+  radius: 6.16
+  rotation: [0, 0, 0]
+  color: red
+- type: box
+  position: [55.99, 26.99, 73.42]
+  size: [13.87, 19.86, 10.2]
+  rotation: [0, 0, 8]
+  color: red
+- type: box
+  position: [72.87, 48.58, 73.83]
+  size: [15.23, 15.86, 18.96]
+  rotation: [0, 0, 86]
+  color: red
+- type: cylinder
+  endpoints:
+  - [75.46, 41.02, 6.86]
+  - [75.46, 41.02, 66.62]
+  radius: 6.12
+  rotation: [0, 0, 0]
+  color: red
+- type: box
+  position: [48.9, 44.12, 78.69]
+  size: [9.04, 16.5, 17.47]
+  rotation: [0, 0, 86]
+  color: red
+- type: cylinder
+  endpoints:
+  - [36.49, 72.54, 11.88]
+  - [36.49, 72.54, 46.37]
+  radius: 4.67
+  rotation: [0, 0, 0]
+  color: red
+- type: sphere
+  position: [20.56, 42.93, 12.02]
+  radius: 7.72
+  color: red
+- type: sphere
+  position: [76.74, 22.56, 65.49]
+  radius: 8.11
+  color: red
+- type: box
+  position: [76.13, 44.23, 86.46]
+  size: [19.69, 14.04, 17.04]
+  rotation: [0, 0, 88]
+  color: red
+- type: sphere
+  position: [48.19, 77.65, 65.32]
+  radius: 5.47
+  color: red
+- type: cylinder
+  endpoints:
+  - [70.34, 55.37, 1.3]
+  - [70.34, 55.37, 36.96]
+  radius: 3.29
+  rotation: [0, 0, 0]
+  color: red
+- type: sphere
+  position: [44.57, 44.2, 56.56]
+  radius: 4.61
+  color: red
+- type: sphere
+  position: [82.97, 63.99, 74.61]
+  radius: 8.48
+  color: red
+- type: sphere
+  position: [15.06, 66.07, 55.25]
+  radius: 8.13
+  color: red
+- type: sphere
+  position: [52.44, 73.81, 87.77]
+  radius: 5.75
+  color: red
+- type: cylinder
+  endpoints:
+  - [41.77, 69.23, 23.61]
+  - [41.77, 69.23, 67.15]
+  radius: 3.51
+  rotation: [0, 0, 0]
+  color: red
+- type: box
+  position: [67.19, 33.29, 26.49]
+  size: [18.36, 14.77, 13.81]
+  rotation: [0, 0, 54]
+  color: red
+- type: cylinder
+  endpoints:
+  - [18.54, 64.91, 23.42]
+  - [18.54, 64.91, 50.43]
+  radius: 5.7
+  rotation: [0, 0, 0]
+  color: red
+- type: box
+  position: [37.07, 83.72, 27.15]
+  size: [14.15, 8.29, 9.96]
+  rotation: [0, 0, 32]
+  color: red
+- type: sphere
+  position: [71.98, 54.32, 28.91]
+  radius: 6.79
+  color: red
+- type: cylinder
+  endpoints:
+  - [12.92, 66.19, 43.55]
+  - [12.92, 66.19, 89.39]
+  radius: 5.45
+  rotation: [0, 0, 0]
+  color: red
+- type: box
+  position: [30.73, 55.65, 41.96]
+  size: [19.9, 19.08, 9.82]
+  rotation: [0, 0, 6]
+  color: red
+- type: sphere
+  position: [64.91, 22.38, 35.76]
+  radius: 7.58
+  color: red
+- type: sphere
+  position: [80.48, 37.97, 30.16]
+  radius: 8.11
+  color: red
+- type: box
+  position: [48.22, 31.47, 17.52]
+  size: [8.21, 14.96, 10.29]
+  rotation: [0, 0, 52]
+  color: red
+- type: sphere
+  position: [20.17, 46.36, 41.99]
+  radius: 5.16
+  color: red
+- type: cylinder
+  endpoints:
+  - [68.91, 60.92, 55.5]
+  - [68.91, 60.92, 78.81]
+  radius: 4.41
+  rotation: [0, 0, 0]
+  color: red
+goals:
+- position: [90.0, 90.0, 10.0]
+  radius: 2.0
+  color: yellow
+- position: [82.0, 90.0, 12.0]
+  radius: 2.0
+  color: yellow

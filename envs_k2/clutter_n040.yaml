@@ -1,0 +1,219 @@
+# Clutter family, 40 randomly placed obstacles, no wall.
+# Only the obstacle count varies across this family; bounds,
+# starts and goals are identical. Seed = 0, K = 2.
+
+bounds:
+  x: [0, 100.0]
+  y: [0, 100.0]
+  z: [0, 100.0]
+initial_configuration:
+- [5.0, 5.0, 5.0]
+- [9.0, 5.0, 5.0]
+obstacles:
+- type: sphere
+  position: [44.43, 15.09, 26.75]
+  radius: 8.73
+  color: red
+- type: sphere
+  position: [24.36, 76.76, 74.48]
+  radius: 5.96
+  color: red
+- type: box
+  position: [74.62, 63.73, 75.61]
+  size: [17.09, 16.3, 18.96]
+  rotation: [0, 0, 42]
+  color: red
+- type: sphere
+  position: [25.61, 68.87, 18.59]
+  radius: 6.13
+  color: red
+- type: cylinder
+  endpoints:
+  - [42.15, 27.36, 71.39]
+  - [42.15, 27.36, 95.18]
+  radius: 3.02
+  rotation: [0, 0, 0]
+  color: red
+- type: cylinder
+  endpoints:
+  - [87.3, 32.12, 61.67]
+  - [87.3, 32.12, 88.6]
+  radius: 5.35
+  rotation: [0, 0, 0]
+  color: red
+- type: box
+  position: [84.84, 66.46, 86.52]
+  size: [14.89, 19.8, 18.04]
+  rotation: [0, 0, 25]
+  color: red
+- type: cylinder
+  endpoints:
+  - [79.53, 59.99, 18.52]
+  - [79.53, 59.99, 59.65]
+  radius: 3.91
+  rotation: [0, 0, 0]
+  color: red
+- type: box
+  position: [24.93, 55.87, 52.73]
+  size: [16.06, 17.13, 9.32]
+  rotation: [0, 0, 69]
+  color: red
+- type: box
+  position: [43.46, 58.68, 64.74]
+  size: [15.03, 16.79, 14.24]
+  rotation: [0, 0, 56]
+  color: red
+- type: sphere
+  position: [33.79, 29.42, 64.84]
+  radius: 7.48
+  color: red
+- type: sphere
+  position: [26.86, 85.86, 63.01]
+  radius: 6.66
+  color: red
+- type: box
+  position: [48.98, 48.17, 31.63]
+  size: [9.87, 16.54, 18.13]
+  rotation: [0, 0, 75]
+  color: red
+- type: box
+  position: [40.03, 55.75, 54.82]
+  size: [19.24, 12.65, 9.98]
+  rotation: [0, 0, 61]
+  color: red
+- type: sphere
+  position: [80.0, 15.67, 27.07]
+  radius: 7.18
+  color: red
+- type: cylinder
+  endpoints:
+  - [71.95, 58.11, 14.21]
+  - [71.95, 58.11, 38.91]
+  radius: 5.02
+  rotation: [0, 0, 0]
+  color: red
+- type: box
+  position: [28.5, 17.71, 53.88]
+  size: [10.3, 8.81, 17.28]
+  rotation: [0, 0, 73]
+  color: red
+- type: cylinder
+  endpoints:
+  - [42.27, 34.35, 15.84]
+  - [42.27, 34.35, 50.28]
+  radius: 5.31
+  rotation: [0, 0, 0]
+  color: red
+- type: cylinder
+  endpoints:
+  - [52.11, 39.01, 36.93]
+  - [52.11, 39.01, 83.96]
+  radius: 5.23
+  rotation: [0, 0, 0]
+  color: red
+- type: box
+  position: [59.42, 56.98, 37.86]
+  size: [11.64, 14.55, 15.35]
+  rotation: [0, 0, 34]
+  color: red
+- type: sphere
+  position: [41.1, 55.0, 86.92]
+  radius: 6.14
+  color: red
+- type: sphere
+  position: [76.07, 18.18, 78.52]
+  radius: 8.71
+  color: red
+- type: box
+  position: [12.92, 48.71, 25.89]
+  size: [19.66, 18.77, 19.53]
+  rotation: [0, 0, 23]
+  color: red
+- type: box
+  position: [51.15, 75.29, 61.58]
+  size: [10.98, 19.21, 13.28]
+  rotation: [0, 0, 54]
+  color: red
+- type: box
+  position: [50.07, 25.94, 34.49]
+  size: [14.89, 9.72, 8.16]
+  rotation: [0, 0, 69]
+  color: red
+- type: sphere
+  position: [69.93, 58.68, 36.64]
+  radius: 7.59
+  color: red
+- type: sphere
+  position: [48.82, 87.96, 70.98]
+  radius: 8.15
+  color: red
+- type: sphere
+  position: [23.57, 27.15, 44.85]
+  radius: 6.56
+  color: red
+- type: box
+  position: [26.79, 71.28, 78.0]
+  size: [11.79, 14.1, 15.13]
+  rotation: [0, 0, 34]
+  color: red
+- type: cylinder
+  endpoints:
+  - [23.21, 33.35, 46.17]
+  - [23.21, 33.35, 88.9]
+  radius: 6.6
+  rotation: [0, 0, 0]
+  color: red
+- type: cylinder
+  endpoints:
+  - [42.9, 35.29, 6.57]
+  - [42.9, 35.29, 52.6]
+  radius: 4.06
+  rotation: [0, 0, 0]
+  color: red
+- type: sphere
+  position: [77.53, 32.57, 63.18]
+  radius: 6.84
+  color: red
+- type: cylinder
+  endpoints:
+  - [80.05, 24.92, 10.95]
+  - [80.05, 24.92, 35.82]
+  radius: 3.31
+  rotation: [0, 0, 0]
+  color: red
+- type: sphere
+  position: [52.6, 24.6, 73.34]
+  radius: 4.11
+  color: red
+- type: sphere
+  position: [47.96, 28.46, 39.05]
+  radius: 5.11
+  color: red
+- type: sphere
+  position: [33.42, 82.44, 43.71]
+  radius: 5.93
+  color: red
+- type: sphere
+  position: [62.47, 62.18, 18.44]
+  radius: 6.91
+  color: red
+- type: sphere
+  position: [67.93, 72.46, 56.73]
+  radius: 4.65
+  color: red
+- type: sphere
+  position: [36.55, 82.49, 47.92]
+  radius: 8.48
+  color: red
+- type: box
+  position: [46.94, 69.39, 48.87]
+  size: [16.5, 11.81, 18.68]
+  rotation: [0, 0, 45]
+  color: red
+goals:
+- position: [90.0, 90.0, 10.0]
+  radius: 2.0
+  color: yellow
+- position: [82.0, 90.0, 12.0]
+  radius: 2.0
+  color: yellow
